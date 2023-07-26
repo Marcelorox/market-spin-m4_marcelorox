@@ -14,13 +14,12 @@ const verifyProductAlreadyExists = (
   );
 
   if (productExists) {
-    return res
-      .status(409)
-      .json({ error: "Product already exists in the database." });
+    return res.status(409).json({ error: "Product already registered." });
   }
 
   return next();
 };
+
 const verifyProductId = (
   req: Request,
   res: Response,

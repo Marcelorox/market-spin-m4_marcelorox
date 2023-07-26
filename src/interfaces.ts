@@ -3,12 +3,9 @@ interface Product {
   name: string;
   price: number;
   weight: number;
-  section: string;
   calories: number;
+  section: string;
   expirationDate: Date;
 }
-interface Doido {
-  name: string;
-}
 
-export { Product, Doido };
+export { Product };

@@ -21,7 +21,12 @@ const createProduct = (request: Request, response: Response) => {
 };
 
 const readProducts = (request: Request, response: Response) => {
-  return response.status(200).json(market);
+  const totalPrice = market.reduce(
+    (total, product) => total + product.price,
+    0
+  );
+
+  return response.status(200).json({ total: totalPrice, products: market });
 };
 
 const readProductsById = (request: Request, response: Response) => {
@@ -36,9 +41,7 @@ const patchProductById = (request: Request, response: Response) => {
   const productId = request.params.id;
   const updatedProductData = request.body;
 
-  const productFind = market.findIndex(
-    (product) => product.id === request.params.id
-  );
+  const productFind = market.findIndex((product) => product.id === productId);
 
   if (productFind === -1) {
     return response.status(404).json({ message: "Produto não encontrado." });
@@ -52,4 +55,25 @@ const patchProductById = (request: Request, response: Response) => {
   return response.status(200).json(productFind);
 };
 
-export { createProduct, readProducts, readProductsById, patchProductById };
+const deleteProductById = (request: Request, response: Response) => {
+  const productId = request.params.id;
+  const updatedProductData = request.body;
+
+  const productFind = market.findIndex((product) => product.id === productId);
+
+  if (productFind === -1) {
+    return response.status(404).json({ message: "Produto não encontrado." });
+  }
+
+  market.splice(productFind, 1);
+
+  return response.status(200).json("deleted with successfull");
+};
+
+export {
+  createProduct,
+  readProducts,
+  readProductsById,
+  patchProductById,
+  deleteProductById,
+};

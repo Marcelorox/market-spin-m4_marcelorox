@@ -19,6 +19,8 @@ app.get("/products/:id", verifyProductId, readProductsById);
 
 app.patch("/products/:id", verifyProductId, patchProductById);
 
+app.delete("/products/:id", verifyProductId, patchProductById);
+
 app.listen(3000, () => {
   console.log("Server is runnig in port 3000");
 });
