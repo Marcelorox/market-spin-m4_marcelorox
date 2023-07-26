@@ -51,13 +51,13 @@ const patchProductById = (request: Request, response: Response) => {
     ...market[productFind],
     ...updatedProductData,
   };
+  const productPatch = market.find((product) => product.id === productId);
 
-  return response.status(200).json(productFind);
+  return response.status(200).json(productPatch);
 };
 
 const deleteProductById = (request: Request, response: Response) => {
   const productId = request.params.id;
-  const updatedProductData = request.body;
 
   const productFind = market.findIndex((product) => product.id === productId);
 
