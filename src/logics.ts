@@ -3,6 +3,8 @@ import { market } from "./database";
 import { Product } from "./interfaces";
 import { randomUUID } from "node:crypto";
 
+let id = 1;
+
 const createProduct = (request: Request, response: Response) => {
   const newClient: Omit<Product, "id" | "expirationDate"> = request.body;
 
@@ -10,11 +12,11 @@ const createProduct = (request: Request, response: Response) => {
   expirationDate.setDate(expirationDate.getDate() + 365);
 
   const newProduct: Product = {
-    id: randomUUID(),
+    id: id,
     expirationDate: expirationDate,
     ...newClient,
   };
-
+  id++;
   market.push(newProduct);
 
   return response.status(201).json(newProduct);
@@ -31,7 +33,7 @@ const readProducts = (request: Request, response: Response) => {
 
 const readProductsById = (request: Request, response: Response) => {
   const productFind = market.find(
-    (product) => product.id === request.params.id
+    (product) => product.id === Number(request.params.id)
   );
 
   return response.status(200).json(productFind);
@@ -41,7 +43,9 @@ const patchProductById = (request: Request, response: Response) => {
   const productId = request.params.id;
   const updatedProductData = request.body;
 
-  const productFind = market.findIndex((product) => product.id === productId);
+  const productFind = market.findIndex(
+    (product) => product.id === Number(productId)
+  );
 
   if (productFind === -1) {
     return response.status(404).json({ message: "Produto não encontrado." });
@@ -51,7 +55,9 @@ const patchProductById = (request: Request, response: Response) => {
     ...market[productFind],
     ...updatedProductData,
   };
-  const productPatch = market.find((product) => product.id === productId);
+  const productPatch = market.find(
+    (product) => product.id === Number(productId)
+  );
 
   return response.status(200).json(productPatch);
 };
@@ -59,7 +65,9 @@ const patchProductById = (request: Request, response: Response) => {
 const deleteProductById = (request: Request, response: Response) => {
   const productId = request.params.id;
 
-  const productFind = market.findIndex((product) => product.id === productId);
+  const productFind = market.findIndex(
+    (product) => product.id === Number(productId)
+  );
 
   if (productFind === -1) {
     return response.status(404).json({ message: "Produto não encontrado." });
@@ -67,7 +75,7 @@ const deleteProductById = (request: Request, response: Response) => {
 
   market.splice(productFind, 1);
 
-  return response.status(200).json("deleted with successfull");
+  return response.status(204).json({ message: "deleted with successfull" });
 };
 
 export {

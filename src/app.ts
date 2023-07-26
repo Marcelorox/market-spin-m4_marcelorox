@@ -6,7 +6,11 @@ import {
   patchProductById,
   deleteProductById,
 } from "./logics";
-import { verifyProductAlreadyExists, verifyProductId } from "./middleware";
+import {
+  verifyProductAlreadyExists,
+  verifyProductId,
+  verifyProductName,
+} from "./middleware";
 import { verifyProductExpiration } from "./cron";
 
 verifyProductExpiration();
@@ -21,7 +25,12 @@ app.get("/products", readProducts);
 
 app.get("/products/:id", verifyProductId, readProductsById);
 
-app.patch("/products/:id", verifyProductId, patchProductById);
+app.patch(
+  "/products/:id",
+  verifyProductId,
+  verifyProductName,
+  patchProductById
+);
 
 app.delete("/products/:id", verifyProductId, deleteProductById);
 

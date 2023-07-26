@@ -14,7 +14,7 @@ const verifyProductAlreadyExists = (
   );
 
   if (productExists) {
-    return res.status(409).json({ error: "Product already registered." });
+    return res.status(409).json({ message: "Product already registered." });
   }
 
   return next();
@@ -25,13 +25,30 @@ const verifyProductId = (
   res: Response,
   next: NextFunction
 ): Response | void => {
-  const productExists = market.find((product) => product.id === req.params.id);
+  const productExists = market.find(
+    (product) => product.id === Number(req.params.id)
+  );
 
   if (!productExists) {
-    return res.status(404).json({ error: "Product not found." });
+    return res.status(404).json({ message: "Product not found." });
+  }
+
+  return next();
+};
+const verifyProductName = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Response | void => {
+  const productExists = market.find(
+    (product) => product.name === req.body.name
+  );
+
+  if (productExists) {
+    return res.status(409).json({ message: "Product already registered." });
   }
 
   return next();
 };
 
-export { verifyProductAlreadyExists, verifyProductId };
+export { verifyProductAlreadyExists, verifyProductId, verifyProductName };
